@@ -18,6 +18,7 @@ export default class UserController implements UserControllerI {
         return UserController.userController;
     }
 
+    private UserController() {}
 
     findAllUsers = (req: Request, res: Response) =>
         UserController.userDao.findAllUsers()
