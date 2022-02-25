@@ -1,6 +1,7 @@
 import MessageDaoI from "../../interfaces/messages/MessageDao";
 import MessageModel from "../../mongoose/messages/MessageModel";
 import Message from "../../models/messages/Message";
+import messageModel from "../../mongoose/messages/MessageModel";
 
 export default class MessageDao implements MessageDaoI {
 
@@ -15,15 +16,15 @@ export default class MessageDao implements MessageDaoI {
     private constructor() {
     }
 
-    userMessagesUser = async (message: Message): Promise<any> =>
-        MessageModel.create(message);
+    userMessagesUser = async (from_uid: string,to_uid: string, message: Message): Promise<any> =>
+        MessageModel.create( {from: from_uid,to:to_uid, message: message});
 
-    userDeletesMessage = async (uid: string): Promise<any> =>
-        MessageModel.deleteOne({from: uid});
+    userDeletesMessage = async ( messageid: string): Promise<any> =>
+        MessageModel.deleteOne({_id: messageid});
 
-    findMessagesSentByUser = async (uid: string): Promise<any> =>
-        MessageModel.find({from: uid});
+    findMessagesSentByUser = async (from_uid: string): Promise<any> =>
+        MessageModel.find({from: from_uid});
 
-    findMessagesSentToUser = async (uid: string): Promise<any> =>
-        MessageModel.find({to: uid});
+    findMessagesSentToUser = async (to_uid: string): Promise<any> =>
+        MessageModel.find({to: to_uid});
 }

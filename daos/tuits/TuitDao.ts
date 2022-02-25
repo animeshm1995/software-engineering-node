@@ -19,7 +19,7 @@ export default class TuitDao implements TuitDaoI {
     }
 
     async deleteTuit(tid: string): Promise<any> {
-        return await TuitModel.deleteOne({id: tid});
+        return await TuitModel.deleteOne({_id: tid});
     }
 
     async findAllTuits(): Promise<Tuit[]> {

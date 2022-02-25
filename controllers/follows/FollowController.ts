@@ -36,8 +36,8 @@ export default class FollowController implements FollowControllerI {
         if(FollowController.followController === null) {
             FollowController.followController = new FollowController();
 
-            app.post("/users/:uid/follows/:userFollowedId", FollowController.followController.userFollowsUser);
-            app.delete("/users/:uid/unfollows/:userFollowedId", FollowController.followController.userUnfollowsUser);
+            app.post("/users/:uid/follows/:userfollowedid", FollowController.followController.userFollowsUser);
+            app.delete("/users/:uid/unfollows/:userfollowedid", FollowController.followController.userUnfollowsUser);
             app.get("/users/:uid/followers", FollowController.followController.getUserFollowerList);
             app.get("/users/:uid/following", FollowController.followController.getUserFollowingList);
 
@@ -68,7 +68,7 @@ export default class FollowController implements FollowControllerI {
      * body formatted as JSON arrays containing the user objects that are followed by the user
      */
     getUserFollowingList(req: Request, res: Response): void {
-        FollowController.followDao.getUserFollowerList(req.params.uid)
+        FollowController.followDao.getUserFollowingList(req.params.uid)
             .then(following => res.json(following));
     }
 
@@ -81,7 +81,7 @@ export default class FollowController implements FollowControllerI {
      * database
      */
     userFollowsUser(req: Request, res: Response): void {
-        FollowController.followDao.userFollowsUser(req.params.uid, req.params.userFollowedId)
+        FollowController.followDao.userFollowsUser(req.params.uid, req.params.userfollowedid)
             .then(follows => res.json(follows));
 
     }
@@ -93,7 +93,7 @@ export default class FollowController implements FollowControllerI {
      * on whether deleting the unfollowed user was successful or not
      */
     userUnfollowsUser(req: Request, res: Response): void {
-        FollowController.followDao.userUnfollowsUser(req.params.uid, req.params.userFollowedId)
+        FollowController.followDao.userUnfollowsUser(req.params.uid, req.params.userfollowedid)
             .then(status => res.send(status));
     }
 
