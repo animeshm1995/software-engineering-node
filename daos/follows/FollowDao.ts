@@ -1,34 +1,69 @@
+/**
+ * @file Implements API for Follows related data access object methods
+ */
 import FollowDaoI from "../../interfaces/follows/FollowDao";
 import FollowModel from "../../mongoose/follows/FollowModel";
 import Follow from "../../models/follows/Follow";
 
+/**
+ * @class FollowDao Implements Data Access Object managing data storage
+ * of Follows
+ * @property {FollowDao} followDao Private single instance of FollowDao
+ */
 export default class FollowDao implements FollowDaoI {
 
     private static followDao: FollowDao | null = null;
+
+    /**
+     * Creates singleton dao instance
+     * @return FollowDao
+     */
     public static getInstance = (): FollowDao => {
         if(FollowDao.followDao === null) {
             FollowDao.followDao = new FollowDao();
         }
         return FollowDao.followDao;
     }
+
     private constructor() {}
 
+    /**
+     * Inserts follows instance into the database
+     * @param {string} userid Primary key of user who follows another user
+     * @param {string} userfollowedid Primary key of user who is followed by another user
+     * @returns Promise To be notified when follows is inserted into the database
+     */
+    followsUser = async (userid: string, userfollowedid: string): Promise<any> =>
+        FollowModel.create({userFollowed: userid, userFollowing: userfollowedid});
 
-    userFollowsUser = async (uid: string, userFollowedId: string): Promise<any> =>
-        FollowModel.create({userFollowed: uid, userFollowing: userFollowedId});
+    /**
+     * Removes follows from the database.
+     * @param {string} userid  Primary key of user who follows another user
+     * @param {string} userfollowedid  Primary key of user who is followed by another user
+     * @returns Promise To be notified when follows entry is removed from the database
+     */
+    unfollowsUser = async (userid: string, userfollowedid: string): Promise<any> =>
+        FollowModel.deleteOne({userFollowed: userid, userFollowing: userfollowedid});
 
-    userUnfollowsUser = async (uid: string, userFollowedId: string): Promise<any> =>
-        FollowModel.deleteOne({userFollowed: uid, userFollowing: userFollowedId});
-
-    getUserFollowingList = async (uid: string): Promise<Follow[]> =>
+    /**
+     * Uses FollowModel to retrieve all following documents from follows collection
+     * @returns Promise To be notified when the following are retrieved from
+     * database
+     */
+    getUserFollowingList = async (userid: string): Promise<Follow[]> =>
         FollowModel
-            .find({userFollowed: uid})
+            .find({userFollowed: userid})
             .populate("userFollowing")
             .exec();
 
-     getUserFollowerList = async (userId: string): Promise<Follow[]> =>
+    /**
+     * Uses FollowModel to retrieve all followers documents from follows collection
+     * @returns Promise To be notified when the followers are retrieved from
+     * database
+     */
+     getUserFollowersList = async (userid: string): Promise<Follow[]> =>
          FollowModel
-             .find({userFollowing: userId})
+             .find({userFollowing: userid})
              .populate("userFollowed")
              .exec();
 
