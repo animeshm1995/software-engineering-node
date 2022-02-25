@@ -5,6 +5,11 @@
 import mongoose, {Schema} from "mongoose";
 import Bookmark from "../../models/bookmarks/Bookmark";
 
+/**
+ * @typedef Bookmark Represents bookmark on a tuit
+ * @property {ObjectId} bookmarkedTuit tuits id
+ * @property {ObjectId} bookmarkedBy user id
+ */
 const BookmarkSchema = new mongoose.Schema<Bookmark>({
     bookmarkedTuit: {type: Schema.Types.ObjectId, ref: "TuitModel"},
     bookmarkedBy: {type: Schema.Types.ObjectId, ref: "UserModel"},
