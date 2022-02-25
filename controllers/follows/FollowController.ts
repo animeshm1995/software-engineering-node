@@ -17,6 +17,10 @@ import FollowControllerI from "../../interfaces/follows/FollowController";
  *     </li>
  *     <li>DELETE /users/:userid/unfollows/:userfollowedid to record that a user
  *     no longer follows another user</li>
+ *     <li>DELETE /users/:userid/removeallfollowing/ to record that a user
+ *     no longer follows any user</li>
+ *     <li>DELETE /users/:userid/removeallfollowers/ to record that a user
+ *     no longer has any followers</li>
  * </ul>
  * @property {FollowDao} followDao Singleton DAO implementing likes CRUD operations
  * @property {FollowController} followController Singleton controller implementing
@@ -40,7 +44,8 @@ export default class FollowController implements FollowControllerI {
             app.get("/users/:userid/following", FollowController.followController.getUserFollowingList);
             app.post("/users/:userid/follows/:userfollowedid", FollowController.followController.followsUser);
             app.delete("/users/:userid/unfollows/:userfollowedid", FollowController.followController.unfollowsUser);
-
+            app.delete("/users/:userid/removeallfollowing/", FollowController.followController.unfollowAllUsers);
+            app.delete("/users/:userid/removeallfollowers/", FollowController.followController.removeAllFollowers);
         }
         return FollowController.followController;
     }
@@ -96,6 +101,28 @@ export default class FollowController implements FollowControllerI {
      */
     unfollowsUser(req: Request, res: Response): void {
         FollowController.followDao.unfollowsUser(req.params.userid, req.params.userfollowedid)
+            .then(status => res.send(status));
+    }
+
+    /**
+     * @param {Request} req Represents request from client, including the
+     * path parameters userid representing the user that is unfollowing all users
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting the unfollowed user was successful or not
+     */
+    unfollowAllUsers(req: Request, res: Response): void {
+        FollowController.followDao.unfollowAllUsers(req.params.userid)
+            .then(status => res.send(status));
+    }
+
+    /**
+     * @param {Request} req Represents request from client, including the
+     * path parameters userid representing the user that is removing all his followers
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting the unfollowed user was successful or not
+     */
+    removeAllFollowers(req: Request, res: Response): void {
+        FollowController.followDao.removeAllFollowers(req.params.userid)
             .then(status => res.send(status));
     }
 

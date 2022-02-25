@@ -43,4 +43,19 @@ export default interface FollowController {
      */
     getUserFollowingList (req: Request, res: Response): void;
 
+    /**
+     * @param {Request} req Represents request from client, including the
+     * path parameters userid representing the user that is unfollowing all users
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting the unfollowed user was successful or not
+     */
+    unfollowAllUsers(req: Request, res: Response): void;
+
+    /**
+     * @param {Request} req Represents request from client, including the
+     * path parameters userid representing the user that is removing all his followers
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting the unfollowed user was successful or not
+     */
+    removeAllFollowers(req: Request, res: Response): void;
 };

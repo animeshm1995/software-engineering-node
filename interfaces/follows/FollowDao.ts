@@ -33,4 +33,18 @@ export default interface FollowDao {
      * database
      */
     getUserFollowingList (userid: string): Promise<Follow[]>;
+
+    /**
+     * Removes follows from the database.
+     * @param {string} userid  Primary key of user who follows all users
+     * @returns Promise To be notified when follows entry is removed from the database
+     */
+    unfollowAllUsers( userid: string): Promise<any>;
+
+    /**
+     * Removes follows from the database.
+     * @param {string} userid  Primary key of user who is removing all his followers
+     * @returns Promise To be notified when follows entry is removed from the database
+     */
+    removeAllFollowers( userid: string): Promise<any>;
 };

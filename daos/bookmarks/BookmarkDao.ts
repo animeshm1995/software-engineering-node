@@ -56,4 +56,13 @@ export default class BookmarkDao implements BookmarkDaoI {
             .find({bookmarkedBy: userid})
             .populate("bookmarkedTuit")
             .exec();
+
+
+    /**
+     * Removes all bookmarks of that user from the database.
+     * @param {string} userid  Primary key of user whose bookmark is to be removed
+     * @returns Promise To be notified when bookmark is removed from the database
+     */
+    unbookmarkAllTuitsByUser = async (userid: string): Promise<any> =>
+        BookmarkModel.deleteMany({bookmarkedBy: userid});
 }

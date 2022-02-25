@@ -2,6 +2,7 @@
  * @file Declares API for Messages related data access object methods
  */
 import Message from "../../models/messages/Message";
+import Tuit from "../../models/tuits/Tuit";
 
 export default interface MessageDao {
 
@@ -37,4 +38,18 @@ export default interface MessageDao {
      */
     findMessagesReceivedByUser(userid: string) : Promise<Message[]>;
 
+    /**
+     * Removes message from the database.
+     * @param {string} fromuserid  Primary key of user who messages are to be deleted
+     * @returns Promise To be notified when message is removed from the database
+     */
+    deleteAllMessagesOfUser(fromuserid: String): Promise<any>;
+
+    /**
+     * Updates a message in the database.
+     * @param {string} messageid  Primary key of message which has to be updated
+     * @param {string} message  Content of message
+     * @returns Promise To be notified when message is updated in the database
+     */
+    updateMessage(messageid: string, message: string): Promise<any>;
 };

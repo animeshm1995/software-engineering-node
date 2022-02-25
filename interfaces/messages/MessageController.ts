@@ -38,4 +38,20 @@ export default interface MessageController {
      * body formatted as JSON containing all the messages received by the user.
      */
     findMessagesReceivedByUser (req: Request, res: Response): void;
+
+    /**
+     * @param {Request} req Represents request from client, including the
+     * path parameters fromuserid representing the user whose messages are being deleted
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting the message was successful or not
+     */
+    deleteAllMessagesOfUser (req: Request, res: Response): void;
+
+    /**
+     * @param {Request} req Represents request from client, including the
+     * path parameters messageid representing the message being updated
+     * @param {Response} res Represents response to client, including status
+     * on whether updating the message was successful or not
+     */
+    updateMessage(req: Request, res: Response): void;
 };

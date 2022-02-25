@@ -27,4 +27,11 @@ export default interface BookmarkDao {
      * database
      */
     findAllBookmarkedTuitsByUser (userid: string): Promise<Bookmark[]>;
+
+    /**
+     * Removes all bookmarks of that user from the database.
+     * @param {string} userid  Primary key of user whose bookmark is to be removed
+     * @returns Promise To be notified when bookmark is removed from the database
+     */
+    unbookmarkAllTuitsByUser (userid: string): Promise<any>;
 };
