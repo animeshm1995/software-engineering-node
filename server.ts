@@ -29,7 +29,8 @@ import BookmarkController from "./controllers/bookmarks/BookmarkController";
 
 var cors = require('cors');
 const app = express();
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/hello', (req, res) =>
     res.send('Hello World!'));
