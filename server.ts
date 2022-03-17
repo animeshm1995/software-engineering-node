@@ -27,6 +27,7 @@ import LikeController from "./controllers/likes/LikeController";
 import MessageController from "./controllers/messages/MessageController";
 import BookmarkController from "./controllers/bookmarks/BookmarkController";
 
+var cors = require('cors');
 const app = express();
 app.use(bodyParser.json())
 
