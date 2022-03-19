@@ -47,6 +47,9 @@ export default class TuitController implements TuitControllerI {
             app.post('/tuits', TuitController.tuitController.createTuit);
             app.delete('/tuits/:tuitid', TuitController.tuitController.deleteTuit);
             app.put('/tuits/:tuitid', TuitController.tuitController.updateTuit);
+
+            //  for testing
+            app.delete('/tuits/username/:postedby/delete', TuitController.tuitController.deleteTuitsByPostedBy);
         }
         return TuitController.tuitController;
     }
@@ -60,9 +63,10 @@ export default class TuitController implements TuitControllerI {
      * body formatted as JSON containing the new tuit that was inserted in the
      * database
      */
-    createTuit = (req: Request, res: Response) =>
+    createTuit = (req: Request, res: Response) => {
         TuitController.tuitDao.createTuit(req.body)
-            .then(tuit => res.json(tuit));
+            .then(tuit => res.json(tuit))
+};
 
     /**
      * @param {Request} req Represents request from client, including the
@@ -115,4 +119,8 @@ export default class TuitController implements TuitControllerI {
     updateTuit = (req: Request, res: Response) =>
         TuitController.tuitDao.updateTuit(req.params.tuitid, req.body)
             .then(status => res.json(status));
+
+    deleteTuitsByPostedBy = (req: Request, res: Response) =>
+        TuitController.tuitDao.deleteTuitsByPostedBy(req.params.postedby)
+            .then(status => res.send(status));
 }
