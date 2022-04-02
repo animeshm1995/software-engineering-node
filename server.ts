@@ -29,6 +29,7 @@ import MessageController from "./controllers/messages/MessageController";
 import BookmarkController from "./controllers/bookmarks/BookmarkController";
 import AuthenticationController from "./controllers/authentication/AuthenticationController";
 import SessionController from "./controllers/session/SessionController";
+import DislikeController from "./controllers/dislikes/DislikeController";
 
 const app = express();
 require('dotenv').config();
@@ -73,6 +74,8 @@ const likeController = LikeController.getInstance(app);
 const messageController = MessageController.getInstance(app);
 
 const bookmarkController = BookmarkController.getInstance(app);
+
+const dislikeController = DislikeController.getInstance(app);
 
 AuthenticationController(app);
 SessionController(app);
