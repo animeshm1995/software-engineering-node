@@ -93,9 +93,11 @@ export default class UserController implements UserControllerI {
      * body formatted as JSON containing the new user that was inserted in the
      * database
      */
-    createUser = (req: Request, res: Response) =>
+    createUser = (req: Request, res: Response) => {
+        console.log("createUser")
         UserController.userDao.createUser(req.body)
-            .then((user: User) => res.json(user));
+            .then((user: User) => res.json(user))
+    };
     
     /**
      * Modifies an existing user instance
