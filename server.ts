@@ -15,8 +15,9 @@
  */
 
 import express from 'express';
-import bodyParser from "body-parser";
 import mongoose from "mongoose";
+const cors = require("cors");
+const session = require("express-session");
 
 // connect to the database
 mongoose.connect('mongodb+srv://cs5500:Spring2022@cluster0.lgzrz.mongodb.net/tuiter?retryWrites=true&w=majority');
@@ -26,11 +27,32 @@ import FollowController from "./controllers/follows/FollowController";
 import LikeController from "./controllers/likes/LikeController";
 import MessageController from "./controllers/messages/MessageController";
 import BookmarkController from "./controllers/bookmarks/BookmarkController";
+import AuthenticationController from "./controllers/authentication/AuthenticationController";
+import SessionController from "./controllers/session/SessionController";
 
-var cors = require('cors');
 const app = express();
-app.use(bodyParser.json());
-app.use(cors());
+require('dotenv').config();
+app.use(cors({
+    credentials: true,
+    origin: process.env.CORS_ORIGIN
+}));
+
+let sess = {
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    saveUninitialized: true,
+    resave: true,
+    cookie: {
+        sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === "production",
+    }
+}
+
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1) // trust first proxy
+}
+
+app.use(session(sess))
+app.use(express.json());
 
 app.get('/hello', (req, res) =>
     res.send('Hello World!'));
@@ -51,6 +73,9 @@ const likeController = LikeController.getInstance(app);
 const messageController = MessageController.getInstance(app);
 
 const bookmarkController = BookmarkController.getInstance(app);
+
+AuthenticationController(app);
+SessionController(app);
 
 /**
  * Start a server listening at port 4000 locally
