@@ -5,6 +5,7 @@ import {Express, Request, Response} from "express";
 import LikeControllerI from "../../interfaces/likes/LikeControllerI";
 import LikeDao from "../../daos/likes/LikeDao";
 import TuitDao from "../../daos/tuits/TuitDao";
+import DislikeDao from "../../daos/dislikes/DislikeDao";
 
 /**
  * @class TuitController Implements RESTful Web service API for likes resource.
@@ -26,6 +27,7 @@ import TuitDao from "../../daos/tuits/TuitDao";
 export default class LikeController implements LikeControllerI {
     private static likeDao: LikeDao = LikeDao.getInstance();
     private static tuitDao: TuitDao = TuitDao.getInstance();
+    private static dislikeDao: DislikeDao = DislikeDao.getInstance();
     private static likeController: LikeController | null = null;
     /**
      * Creates singleton controller instance
@@ -37,7 +39,7 @@ export default class LikeController implements LikeControllerI {
         if(LikeController.likeController === null) {
             LikeController.likeController = new LikeController();
             app.get("/api/users/:uid/likes", LikeController.likeController.findAllTuitsLikedByUser);
-            app.get("/api/tuits/:tid/likes", LikeController.likeController.findAllUsersThatLikedTuit);
+            app.get("/api/tuits/:tid/likes", LikeController.likeController.findAllUsersThatDislikedTuit);
             app.put("/api/users/:uid/likes/:tid", LikeController.likeController.userTogglesTuitLikes);
         }
         return LikeController.likeController;
@@ -52,7 +54,7 @@ export default class LikeController implements LikeControllerI {
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the user objects
      */
-    findAllUsersThatLikedTuit = (req: Request, res: Response) =>
+    findAllUsersThatDislikedTuit = (req: Request, res: Response) =>
         LikeController.likeDao.findAllUsersThatLikedTuit(req.params.tid)
             .then(likes => res.json(likes));
 
@@ -90,6 +92,7 @@ export default class LikeController implements LikeControllerI {
     userTogglesTuitLikes = async (req: Request, res: Response) => {
         const likeDao = LikeController.likeDao;
         const tuitDao = LikeController.tuitDao;
+        const dislikeDao = LikeController.dislikeDao;
         const uid = req.params.uid;
         const tid = req.params.tid;
         // @ts-ignore
@@ -99,6 +102,8 @@ export default class LikeController implements LikeControllerI {
         try {
             const userAlreadyLikedTuit = await likeDao.findUserLikesTuit(userId, tid);
             const howManyLikedTuit = await likeDao.countHowManyLikedTuit(tid);
+            const howManyDislikedTuit = await dislikeDao.countHowManyDislikedTuit(tid);
+            const userAlreadyDislikedTuit = await dislikeDao.findUserDislikesTuit(userId, tid);
             let tuit = await tuitDao.findTuitById(tid);
             if (userAlreadyLikedTuit) {
                 await likeDao.userUnlikesTuit(userId, tid);
@@ -106,6 +111,11 @@ export default class LikeController implements LikeControllerI {
             } else {
                 await LikeController.likeDao.userLikesTuit(userId, tid);
                 tuit.stats.likes = howManyLikedTuit + 1;
+                await LikeController.dislikeDao.userUndislikesTuit(userId, tid);
+                if (userAlreadyDislikedTuit) {
+                    await dislikeDao.userUndislikesTuit(userId, tid);
+                    tuit.stats.dislikes = howManyDislikedTuit - 1;
+                }
             };
             await tuitDao.updateLikes(tid, tuit.stats);
             res.sendStatus(200);
