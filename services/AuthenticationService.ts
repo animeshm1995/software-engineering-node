@@ -1,3 +1,6 @@
+/**
+ * @file Service RESTful Web service API for auhtentication resource
+ */
 import mongoose from "mongoose";
 import UserDao from "../daos/users/UserDao";
 
