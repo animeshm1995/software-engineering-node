@@ -19,8 +19,6 @@ import mongoose from "mongoose";
 const cors = require("cors");
 const session = require("express-session");
 
-// connect to the database
-mongoose.connect('mongodb+srv://cs5500:Spring2022@cluster0.lgzrz.mongodb.net/tuiter?retryWrites=true&w=majority');
 import UserController from "./controllers/users/UserController";
 import TuitController from "./controllers/tuits/TuitController";
 import FollowController from "./controllers/follows/FollowController";
@@ -31,7 +29,6 @@ import AuthenticationController from "./controllers/authentication/Authenticatio
 import SessionController from "./controllers/session/SessionController";
 
 const app = express();
-require('dotenv').config();
 app.use(cors({
     credentials: true,
     origin: process.env.CORS_ORIGIN
@@ -51,6 +48,8 @@ if (process.env.NODE_ENV === 'production') {
     app.set('trust proxy', 1) // trust first proxy
 }
 
+// connect to the database
+mongoose.connect('mongodb+srv://cs5500:Spring2022@cluster0.lgzrz.mongodb.net/tuiter?retryWrites=true&w=majority');
 app.use(session(sess))
 app.use(express.json());
 
