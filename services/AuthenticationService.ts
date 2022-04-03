@@ -16,6 +16,12 @@ const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${
 // connect to the database
 mongoose.connect(connectionString);
 
+/**
+ * Allows the users to login to the Tuiter application.
+ * @param {string} u Represents username from client
+ * @param {string} p Represents password to client, an error
+ * message if the user who is not an existing user tries to login.
+ */
 export const login = (u: string, p: string) =>
   userDao.findUserByCredentials(u, p)
     .then(user => {
@@ -28,6 +34,12 @@ export const login = (u: string, p: string) =>
     .then(user => user)
     .catch(e => e)
 
+/**
+ * Allows the users to register to the Tuiter application.
+ * @param {string} u Represents username from client
+ * @param {string} p Represents password to client, an error
+ * @param {string} e Represents email to client, an error
+ */
 export const register = (u: string, p: string, e: string) =>
   userDao.findUserByUsername(u)
     .then(user => {
@@ -42,6 +54,10 @@ export const register = (u: string, p: string, e: string) =>
     .then(newUser => newUser)
     .catch(e => e);
 
+/**
+ * Allows the users to initialize salaries to the Tuiter application.
+ * @param {number} salary Represents salary from client
+ */
 export const initializeSalaries = (salary: number) => {
   return userDao.findAllUsers()
     .then(users => {
@@ -55,6 +71,10 @@ export const initializeSalaries = (salary: number) => {
     })
 }
 
+/**
+ * Allows the users to raise salaries to the Tuiter application.
+ * @param {number} raise Represents salary from client
+ */
 export const giveRaise = (raise: number) => {
   return userDao.findAllUsers()
     .then(users => {
